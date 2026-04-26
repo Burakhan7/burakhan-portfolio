@@ -1,306 +1,414 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YouTube Etiket Analizi & İçerik Üretici</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burakhan Gültoplar — Yazılım Geliştirici</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #f5f5f0;
-      color: #1a1a1a;
-      min-height: 100vh;
-      padding: 2rem 1rem;
-    }
+  :root {
+    --bg: #f9f8f5;
+    --bg2: #f1efe8;
+    --text: #181815;
+    --muted: #68685f;
+    --border: #dddbd2;
+    --tag-bg: #eceae2;
+    --tag-text: #3d3d38;
+    --green: #2a6048;
+    --green-bg: #eaf3ed;
+  }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-    }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
 
-    h1 {
-      font-size: 22px;
-      font-weight: 500;
-      margin-bottom: 1.5rem;
-      color: #1a1a1a;
-    }
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.55s cubic-bezier(.22,.68,0,1.1), transform 0.55s cubic-bezier(.22,.68,0,1.1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    .card {
-      background: #ffffff;
-      border: 0.5px solid rgba(0,0,0,0.15);
-      border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-    }
+  .reveal-group > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.45s cubic-bezier(.22,.68,0,1.1), transform 0.45s cubic-bezier(.22,.68,0,1.1);
+  }
+  .reveal-group.visible > *:nth-child(1)  { opacity:1; transform:none; transition-delay:.04s; }
+  .reveal-group.visible > *:nth-child(2)  { opacity:1; transform:none; transition-delay:.10s; }
+  .reveal-group.visible > *:nth-child(3)  { opacity:1; transform:none; transition-delay:.16s; }
+  .reveal-group.visible > *:nth-child(4)  { opacity:1; transform:none; transition-delay:.22s; }
+  .reveal-group.visible > *:nth-child(5)  { opacity:1; transform:none; transition-delay:.28s; }
+  .reveal-group.visible > *:nth-child(6)  { opacity:1; transform:none; transition-delay:.34s; }
+  .reveal-group.visible > *:nth-child(7)  { opacity:1; transform:none; transition-delay:.40s; }
+  .reveal-group.visible > *:nth-child(8)  { opacity:1; transform:none; transition-delay:.46s; }
+  .reveal-group.visible > *:nth-child(9)  { opacity:1; transform:none; transition-delay:.52s; }
+  .reveal-group.visible > *:nth-child(10) { opacity:1; transform:none; transition-delay:.58s; }
+  .reveal-group.visible > *:nth-child(11) { opacity:1; transform:none; transition-delay:.64s; }
+  .reveal-group.visible > *:nth-child(12) { opacity:1; transform:none; transition-delay:.70s; }
+  .reveal-group.visible > *:nth-child(13) { opacity:1; transform:none; transition-delay:.76s; }
+  .reveal-group.visible > *:nth-child(14) { opacity:1; transform:none; transition-delay:.82s; }
 
-    .section-title {
-      font-size: 15px;
-      font-weight: 500;
-      color: #1a1a1a;
-      margin-bottom: 12px;
-    }
+  /* ── HERO ENTRY ── */
+  .hero-badge   { animation: fadeUp .6s .05s both cubic-bezier(.22,.68,0,1.1); }
+  .hero-h1      { animation: fadeUp .65s .18s both cubic-bezier(.22,.68,0,1.1); }
+  .hero-sub-txt { animation: fadeUp .65s .30s both cubic-bezier(.22,.68,0,1.1); }
+  .hero-cta     { animation: fadeUp .6s .42s both cubic-bezier(.22,.68,0,1.1); }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
 
-    .label {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 6px;
-      display: block;
-    }
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(249,248,245,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    height: 52px;
+    display: flex; align-items: center;
+    padding: 0 max(1.5rem, calc((100vw - 700px)/2));
+    justify-content: space-between;
+    animation: fadeDown .5s both;
+  }
+  @keyframes fadeDown {
+    from { opacity:0; transform:translateY(-10px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; font-weight: 500;
+    color: var(--text); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+  .nav-links a {
+    font-size: 13px; color: var(--muted);
+    text-decoration: none; transition: color .15s;
+  }
+  .nav-links a:hover { color: var(--text); }
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
+  /* ── LAYOUT ── */
+  .wrap { max-width: 700px; margin: 0 auto; padding: 0 1.75rem; }
+  section { padding: 3.5rem 0; }
+  section + section { border-top: 1px solid var(--border); }
 
-    input[type="text"],
-    input[type="password"],
-    input[type="number"] {
-      width: 100%;
-      padding: 8px 12px;
-      border: 0.5px solid rgba(0,0,0,0.2);
-      border-radius: 8px;
-      font-size: 14px;
-      color: #1a1a1a;
-      background: #fff;
-      outline: none;
-      transition: border-color 0.15s;
-    }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
 
-    input:focus {
-      border-color: rgba(0,0,0,0.4);
-    }
+  /* ── HERO ── */
+  #hero { padding: 7rem 0 4rem; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--green-bg); color: var(--green);
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    padding: 4px 11px; border-radius: 5px; margin-bottom: 1.5rem;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--green);
+    animation: blink 2.2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
 
-    .divider {
-      border: none;
-      border-top: 0.5px solid rgba(0,0,0,0.1);
-      margin: 1rem 0;
-    }
+  h1 {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 300; line-height: 1.12;
+    letter-spacing: -.035em; margin-bottom: 1rem;
+  }
+  h1 em { font-style: italic; }
+  .hero-sub-txt {
+    font-size: 15px; color: var(--muted);
+    max-width: 480px; line-height: 1.75; margin-bottom: 2rem;
+  }
+  .hero-cta { display: flex; gap: 9px; flex-wrap: wrap; }
+  .btn {
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    font-weight: 500; padding: 7px 16px;
+    border-radius: 7px; text-decoration: none;
+    cursor: pointer; border: none;
+    display: inline-block; transition: all .15s;
+  }
+  .btn-dark { background: var(--text); color: var(--bg); }
+  .btn-dark:hover { background: #2e2e2b; transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: #aaa; color: var(--text); transform: translateY(-1px); }
 
-    .btn-primary {
-      background: #1a1a1a;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 4px;
-      transition: opacity 0.15s;
-    }
+  /* ── STACK ── */
+  .stack-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px; color: var(--tag-text);
+    background: var(--tag-bg); border: 1px solid var(--border);
+    padding: 5px 12px; border-radius: 20px;
+    transition: background .12s, transform .15s;
+  }
+  .pill:hover { background: var(--bg2); transform: translateY(-2px); }
 
-    .btn-primary:hover { opacity: 0.85; }
-    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  /* ── PROJELER ── */
+  .proj-item {
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 1rem; align-items: start;
+  }
+  .proj-item:first-child { border-top: 1px solid var(--border); }
+  .proj-header { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; flex-wrap: wrap; }
+  .proj-title { font-size: 15px; font-weight: 500; letter-spacing: -.01em; }
+  .proj-badge {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    padding: 2px 7px; border-radius: 4px; letter-spacing: .04em;
+  }
+  .badge-prod { background: var(--green-bg); color: var(--green); }
+  .badge-iot  { background: #eef2fb; color: #2a4a9a; }
+  .proj-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    font-family: 'DM Mono', monospace; font-size: 10.5px;
+    background: var(--tag-bg); color: var(--tag-text);
+    padding: 2px 7px; border-radius: 4px;
+  }
+  .proj-arrow {
+    font-size: 15px; color: var(--border); margin-top: 2px;
+    transition: transform .2s, color .2s;
+  }
+  .proj-item:hover .proj-arrow { transform: translate(3px,-3px); color: var(--muted); }
 
-    .status {
-      font-size: 13px;
-      color: #666;
-      margin-top: 8px;
-      min-height: 20px;
-    }
+  /* ── DENEYİM ── */
+  .exp-item {
+    display: grid; grid-template-columns: 95px 1fr;
+    gap: 1.25rem; padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .exp-item:first-child { border-top: 1px solid var(--border); }
+  .exp-period {
+    font-family: 'DM Mono', monospace; font-size: 10.5px;
+    color: var(--muted); padding-top: 3px; line-height: 1.6;
+  }
+  .exp-role { font-size: 14px; font-weight: 500; letter-spacing: -.01em; margin-bottom: 1px; }
+  .exp-company { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .exp-detail { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
 
-    .status.error { color: #c0392b; }
+  /* ── EĞİTİM + İLETİŞİM yan yana ── */
+  .bottom-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; align-items: start;
+  }
+  .edu-box, .contact-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.4rem;
+  }
+  .edu-degree { font-size: 13.5px; font-weight: 500; letter-spacing: -.01em; margin-bottom: 2px; }
+  .edu-uni { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .edu-courses { font-size: 11px; color: var(--muted); }
+  .edu-courses span { font-family: 'DM Mono', monospace; font-size: 10.5px; }
+  .edu-year { font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--muted); margin-top: 8px; }
 
-    .step-label {
-      font-size: 12px;
-      color: #999;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 10px;
-    }
+  .contact-card h2 {
+    font-size: 1.05rem; font-weight: 400;
+    letter-spacing: -.02em; margin-bottom: 5px;
+  }
+  .contact-card p { font-size: 12px; color: var(--muted); margin-bottom: 1rem; }
+  .contact-row { display: flex; flex-direction: column; gap: 7px; }
+  .c-link {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--text); text-decoration: none;
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 6px 11px; border-radius: 7px;
+    transition: border-color .15s, transform .15s;
+  }
+  .c-link:hover { border-color: #aaa; transform: translateX(3px); }
 
-    .tag-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
-    }
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.1rem 1.75rem 1.75rem;
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 700px; margin: 0 auto;
+  }
+  footer span { font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--muted); }
 
-    .tag {
-      background: #f5f5f0;
-      border: 0.5px solid rgba(0,0,0,0.12);
-      border-radius: 8px;
-      padding: 4px 10px;
-      font-size: 13px;
-      color: #1a1a1a;
-    }
-
-    .tag .count {
-      color: #999;
-      font-size: 11px;
-      margin-left: 4px;
-    }
-
-    .output-text {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #1a1a1a;
-      white-space: pre-wrap;
-    }
-
-    .hidden { display: none; }
-
-    @media (max-width: 480px) {
-      .row { grid-template-columns: 1fr; }
-    }
-  </style>
+  @media (max-width: 560px) {
+    .exp-item { grid-template-columns: 1fr; gap: .15rem; }
+    .bottom-grid { grid-template-columns: 1fr; }
+    .nav-links { gap: 1.1rem; }
+    h1 { font-size: 2rem; }
+  }
+</style>
 </head>
 <body>
 
-<div class="container">
-  <h1>YouTube Etiket Analizi & İçerik Üretici</h1>
+<nav>
+  <a class="nav-logo" href="#hero">burakhan.dev</a>
+  <ul class="nav-links">
+    <li><a href="#projeler">Projeler</a></li>
+    <li><a href="#deneyim">Deneyim</a></li>
+    <li><a href="#iletisim">İletişim</a></li>
+  </ul>
+</nav>
 
-  <div class="card">
-    <p class="section-title">API ayarları</p>
-    <div class="row">
-      <div>
-        <span class="label">YouTube API key</span>
-        <input type="password" id="yt-key" placeholder="AIza..." />
-      </div>
-      <div>
-        <span class="label">Claude API key</span>
-        <input type="password" id="claude-key" placeholder="sk-ant-..." />
-      </div>
-    </div>
+<main>
 
-    <hr class="divider" />
-
-    <p class="section-title">Analiz ayarları</p>
-    <div class="row">
-      <div>
-        <span class="label">Arama konusu</span>
-        <input type="text" id="topic" value="futbol" />
+  <!-- HERO -->
+  <div class="wrap">
+    <section id="hero">
+      <div class="hero-badge">müsait &amp; projelere açık</div>
+      <h1 class="hero-h1">Merhaba, ben<br><em>Burakhan Gültoplar.</em></h1>
+      <p class="hero-sub-txt">Bilgisayar mühendisliği öğrencisiyim; mobil geliştirmeyi bir araç olarak kullanarak bulut sistemleri, yapay zeka entegrasyonu, backend mimarisi ve IoT gibi alanlarda pratik deneyim kazanıyorum. Flutter ile geliştirdiğim uygulamalarda arayüze önem verdim, Firebase ve Cloud Functions ile backend sistemleri kurdum, REST API entegrasyonları yaptım, Cloudinary ile görüntü işleme hatları oluşturdum, Gemini Vision ile yapay zeka servislerini bir ürüne bağladım. ESP32 ve MQTT kullanarak donanımdan uygulamaya uzanan bir IoT sistemi tasarladım. Gerçek projelerle öğrendiklerimi pratiğe döküyorum.</p>
+      <div class="hero-cta">
+        <a class="btn btn-dark" href="#projeler">Projeleri gör</a>
+        <a class="btn btn-outline" href="#iletisim">İletişime geç</a>
       </div>
-      <div>
-        <span class="label">Video sayısı</span>
-        <input type="number" id="video-count" value="20" min="5" max="50" />
-      </div>
-    </div>
-
-    <button class="btn-primary" id="run-btn" onclick="runAnalysis()">Analizi başlat</button>
-    <p class="status" id="status"></p>
+    </section>
   </div>
 
-  <div class="card hidden" id="tags-card">
-    <p class="step-label">Adım 1 — en popüler etiketler</p>
-    <div class="tag-grid" id="tags-output"></div>
+  <!-- STACK -->
+  <div class="wrap">
+    <section id="stack">
+      <p class="section-label reveal">teknoloji &amp; araçlar</p>
+      <div class="stack-pills reveal-group">
+        <span class="pill">Flutter</span>
+        <span class="pill">Dart</span>
+        <span class="pill">Firebase</span>
+        <span class="pill">Cloud Functions</span>
+        <span class="pill">TypeScript</span>
+        <span class="pill">Gemini Vision</span>
+        <span class="pill">Cloudinary</span>
+        <span class="pill">REST API</span>
+        <span class="pill">MQTT</span>
+        <span class="pill">Python</span>
+        <span class="pill">ESP32 / IoT</span>
+        <span class="pill">C / C++</span>
+        <span class="pill">Google Cloud</span>
+        <span class="pill">.NET</span>
+      </div>
+    </section>
   </div>
 
-  <div class="card hidden" id="content-card">
-    <p class="step-label">Adım 2 — üretilen içerik</p>
-    <p class="output-text" id="content-output"></p>
+  <!-- PROJELER -->
+  <div class="wrap">
+    <section id="projeler">
+      <p class="section-label reveal">projeler</p>
+
+      <div class="proj-item reveal">
+        <div>
+          <div class="proj-header">
+            <span class="proj-title">Luvia (StyleAI)</span>
+            <span class="proj-badge badge-prod">üretime alındı</span>
+          </div>
+          <p class="proj-desc">Yapay zeka destekli sanal kıyafet asistanı. Flutter arayüzden Firebase backend'e, Gemini Vision entegrasyonundan token ekonomisine kadar full-stack mobil mimariyi tek başıma tasarlayıp geliştirdim.</p>
+          <div class="tags">
+            <span class="tag">Flutter</span><span class="tag">Firebase</span>
+            <span class="tag">TypeScript</span><span class="tag">Gemini Vision</span>
+            <span class="tag">Cloudinary</span><span class="tag">Cloud Functions</span>
+          </div>
+        </div>
+        <span class="proj-arrow"><a href="https://play.google.com/store/apps/details?id=com.bglabs.luvia&hl=tr"target="_blank">↗</a></span>
+      </div>
+
+      <div class="proj-item reveal">
+        <div>
+          <div class="proj-header">
+            <span class="proj-title">Enerji İzleme Sistemi</span>
+            <span class="proj-badge badge-iot">IoT</span>
+          </div>
+          <p class="proj-desc">3 kişilik ekibe liderlik ettiğim donanımdan dashboard'a tam kapsamlı IoT projesi. ESP32 + akım sensörleri, MQTT/Firebase veri akışı, ML tabanlı anomali tespiti ve Flutter dashboard.</p>
+          <div class="tags">
+            <span class="tag">Flutter</span><span class="tag">ESP32</span>
+            <span class="tag">MQTT</span><span class="tag">Firebase</span>
+            <span class="tag">Python / ML</span><span class="tag">Gömülü</span>
+          </div>
+        </div>       
+      </div>
+
+    </section>
   </div>
-</div>
+
+  <!-- DENEYİM -->
+  <div class="wrap">
+    <section id="deneyim">
+      <p class="section-label reveal">iş deneyimi</p>
+
+      <div class="exp-item reveal">
+        <div class="exp-period">Kas. 2025<br>— devam</div>
+        <div>
+          <div class="exp-role">Mobil Uygulama Geliştirici</div>
+          <div class="exp-company">Serbest Çalışma · İzmir</div>
+          <div class="exp-detail">Müşteri odaklı Flutter uygulamaları; API entegrasyonu ve UI/UX konularında uçtan uca çözümler.</div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-period">Tem.–Ağu.<br>2025</div>
+        <div>
+          <div class="exp-role">Mobil Uygulama Geliştirici</div>
+          <div class="exp-company">Bilgisayar Bilimleri Araştırma ve Uygulama Merkezi · Erzurum</div>
+          <div class="exp-detail">GPS + REST API entegrasyonlu gerçek zamanlı hava durumu uygulaması. Temiz UI ve anlık yanıt verebilirlik odaklı geliştirme.</div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- EĞİTİM + İLETİŞİM -->
+  <div class="wrap">
+    <section id="iletisim">
+      <div class="bottom-grid reveal">
+
+        <div class="edu-box">
+          <p class="section-label" style="margin-bottom:.9rem">eğitim</p>
+          <div class="edu-degree">Bilgisayar Mühendisliği, Lisans</div>
+          <div class="edu-uni">Manisa Celal Bayar Üniversitesi · EQF: 6</div>
+          <div class="edu-courses"><span>Yazılım Tasarım Desenleri · IoT Sistemleri · Yazılım Spesifikasyonları</span></div>
+          <div class="edu-year">Eyl. 2022 — devam</div>
+        </div>
+
+        <div class="contact-card">
+          <p class="section-label" style="margin-bottom:.9rem">iletişim</p>
+          <h2>Birlikte bir şey yapalım.</h2>
+          <p>Proje, iş teklifi ya da soru için yaz.</p>
+          <div class="contact-row">
+            <a class="c-link" href="mailto:burakhangultoplar@gmail.com">✉ burakhangultoplar@gmail.com</a>
+            <a class="c-link" href="tel:+905309482500">✆ +90 530 948 2500</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<footer>
+  <span>© 2025 Burakhan Gültoplar</span>
+  <span>Manisa, Türkiye</span>
+</footer>
 
 <script>
-async function runAnalysis() {
-  const ytKey = document.getElementById('yt-key').value.trim();
-  const claudeKey = document.getElementById('claude-key').value.trim();
-  const topic = document.getElementById('topic').value.trim();
-  const videoCount = parseInt(document.getElementById('video-count').value) || 20;
-  const btn = document.getElementById('run-btn');
-  const status = document.getElementById('status');
-
-  status.className = 'status';
-
-  if (!ytKey || !claudeKey || !topic) {
-    status.textContent = 'Lütfen tüm alanları doldur.';
-    return;
-  }
-
-  btn.disabled = true;
-  document.getElementById('tags-card').classList.add('hidden');
-  document.getElementById('content-card').classList.add('hidden');
-
-  try {
-    // 1. YouTube arama
-    status.textContent = 'YouTube videoları aranıyor...';
-    const searchRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=id,snippet&q=${encodeURIComponent(topic)}&maxResults=${videoCount}&order=viewCount&type=video&relevanceLanguage=tr&key=${ytKey}`
-    );
-    const searchData = await searchRes.json();
-    if (searchData.error) throw new Error(searchData.error.message);
-
-    const videoIds = searchData.items.map(i => i.id.videoId).filter(Boolean);
-    if (videoIds.length === 0) throw new Error('Video bulunamadı.');
-
-    // 2. Video detayları ve etiketler
-    status.textContent = `${videoIds.length} video bulundu. Etiketler çekiliyor...`;
-    const detailRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(',')}&key=${ytKey}`
-    );
-    const detailData = await detailRes.json();
-    if (detailData.error) throw new Error(detailData.error.message);
-
-    const tagCount = {};
-    for (const video of detailData.items) {
-      const snippet = video.snippet || {};
-      const tags = snippet.tags || [];
-      const text = (snippet.title || '') + ' ' + (snippet.description || '');
-      const hashTags = (text.match(/#(\w+)/g) || []).map(h => h.slice(1));
-      for (const t of [...tags, ...hashTags]) {
-        const key = t.toLowerCase();
-        tagCount[key] = (tagCount[key] || 0) + 1;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
       }
-    }
-
-    const sorted = Object.entries(tagCount)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 20);
-
-    // 3. Etiketleri göster
-    const tagsOutput = document.getElementById('tags-output');
-    tagsOutput.innerHTML = '';
-    for (const [tag, count] of sorted) {
-      const el = document.createElement('span');
-      el.className = 'tag';
-      el.innerHTML = `#${tag}<span class="count">${count}</span>`;
-      tagsOutput.appendChild(el);
-    }
-    document.getElementById('tags-card').classList.remove('hidden');
-
-    // 4. Claude ile içerik üret
-    status.textContent = 'İçerik üretiliyor...';
-    const tagList = sorted.map(([t]) => '#' + t).join(' ');
-
-    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': claudeKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 1000,
-        system: 'Sen bir sosyal medya içerik üreticisisin. Her istekte sadece verilen etiketleri kullan, önceki konularla bağlantı kurma. Her içerik tamamen bağımsız olsun.',
-        messages: [{
-          role: 'user',
-          content: `Konu: ${topic}\n\nAşağıdaki etiketler bu konudaki en popüler YouTube videolarından çıkarıldı:\n\n${tagList}\n\nSADECE bu etiketleri ve bu konuyu kullanarak Instagram veya YouTube için Türkçe, enerjik ve ilgi çekici bir sosyal medya paylaşım metni yaz. Metin 150-200 kelime arasında olsun. Etiketleri metnin sonuna ekle.`
-        }]
-      })
     });
+  }, { threshold: 0.1 });
 
-    const claudeData = await claudeRes.json();
-    if (claudeData.error) throw new Error(claudeData.error.message);
-
-    const content = claudeData.content?.[0]?.text || 'İçerik üretilemedi.';
-    document.getElementById('content-output').textContent = content;
-    document.getElementById('content-card').classList.remove('hidden');
-    status.textContent = 'Tamamlandı!';
-
-  } catch (err) {
-    status.className = 'status error';
-    status.textContent = 'Hata: ' + err.message;
-  } finally {
-    btn.disabled = false;
-  }
-}
+  document.querySelectorAll('.reveal, .reveal-group').forEach(el => io.observe(el));
 </script>
 
 </body>
